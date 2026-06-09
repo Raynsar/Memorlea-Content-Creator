@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Memorléa – Wedding Content Creator</title>
+  <meta name="description" content="Memorléa adalah Wedding Content Creator berbasis di Jakarta & Cilacap. Kami mengabadikan setiap momen candid dan behind the scenes pernikahanmu secara real-time."/>
+  <meta property="og:title" content="Memorléa – Wedding Content Creator"/>
+  <meta property="og:description" content="Capturing your story, one candid moment at a time."/>
+  <meta property="og:image" content="assets/images/hero1.jpg"/>
+  <meta property="og:type" content="website"/>
+  <link rel="icon" type="image/png" href="assets/images/logo.png"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<!-- Loading Screen -->
+<div id="loading-screen">
+  <img src="assets/images/logo.png" alt="Memorléa"/>
+  <p>Memorléa</p>
+</div>
+
+<!-- Page Transition -->
+<div class="page-transition" id="page-transition"></div>
+
+<!-- Navbar -->
+<nav class="navbar" id="navbar">
+  <a href="index.html" class="navbar-logo" style="text-decoration:none">
+    <img src="assets/images/logo.png" alt="Memorléa"/>
+    <span>Memorléa</span>
+  </a>
+  <ul class="navbar-links" id="navbar-links">
+    <li><a href="index.html" class="active">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="portfolio.html">Portfolio</a></li>
+    <li><a href="faq.html">FAQ</a></li>
+    <li><a href="form.html" class="nav-cta">Book Now</a></li>
+    <li><a href="admin-login.html" class="nav-admin-link" title="Admin">⚙</a></li>
+  </ul>
+  <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- Hero Carousel -->
+<section class="hero" id="hero">
+  <div class="hero-slide active">
+    <img src="assets/images/hero1.jpg" alt="Wedding moment" loading="eager"/>
+  </div>
+  <div class="hero-slide">
+    <img src="assets/images/hero2.jpg" alt="Wedding moment" loading="lazy"/>
+  </div>
+  <div class="hero-slide">
+    <img src="assets/images/hero3.jpg" alt="Wedding moment" loading="lazy"/>
+  </div>
+  <div class="hero-slide">
+    <img src="assets/images/hero4.jpg" alt="Wedding moment" loading="lazy"/>
+  </div>
+  <div class="hero-slide">
+    <img src="assets/images/hero5.jpg" alt="Wedding moment" loading="lazy"/>
+  </div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">Wedding &amp; Event Content Creator</p>
+    <h1 class="hero-title">Capturing Your Story</h1>
+    <p class="hero-sub">Every part of your wedding day is special — we believe even the smallest<br/>moments, like a smile or a warm hug, are important to remember.</p>
+    <div class="hero-actions">
+      <a href="form.html" class="btn btn-primary">Get in Touch</a>
+      <a href="portfolio.html" class="btn btn-outline">View Portfolio</a>
+    </div>
+  </div>
+  <div class="hero-dots" id="hero-dots"></div>
+</section>
+
+<!-- Stats Counter -->
+<section class="stats-section">
+  <p class="stats-eyebrow">Dipercaya Banyak Pasangan</p>
+  <h2 class="stats-title">Stories Captured &amp; Told</h2>
+  <div class="stats-grid">
+    <div class="stat-card reveal">
+      <div class="stat-number"><span class="counter" data-target="0" data-key="clients">0</span><span class="stat-plus">+</span></div>
+      <p class="stat-label">Client</p>
+    </div>
+    <div class="stat-card reveal">
+      <div class="stat-number"><span class="counter" data-target="0" data-key="vendors">0</span></div>
+      <p class="stat-label">Vendor</p>
+    </div>
+    <div class="stat-card reveal">
+      <div class="stat-number"><span class="counter" data-target="0" data-key="cities">0</span></div>
+      <p class="stat-label">Kota</p>
+    </div>
+    <div class="stat-card reveal">
+      <div class="stat-number"><span class="counter" data-target="0" data-key="crew">0</span></div>
+      <p class="stat-label">Crew</p>
+    </div>
+  </div>
+  <p class="stats-tagline">— Dari Jakarta hingga seluruh Indonesia —</p>
+</section>
+
+<!-- How It Works -->
+<section class="section howitworks-section">
+  <div class="section-header reveal">
+    <p class="section-eyebrow">Prosesnya Mudah</p>
+    <h2 class="section-title">How It Works</h2>
+    <p class="section-sub">Dari konsultasi hingga file terkirim, kami siap menemanimu</p>
+    <div class="divider"></div>
+  </div>
+  <div class="steps-grid">
+    <div class="step-card reveal">
+      <span class="step-num">01</span>
+      <div class="step-icon">💬</div>
+      <h3 class="step-title">Konsultasi</h3>
+      <p class="step-desc">Isi form booking, ceritakan detail acaramu, dan tim kami akan segera menghubungimu untuk diskusi lebih lanjut.</p>
+    </div>
+    <div class="step-card reveal">
+      <span class="step-num">02</span>
+      <div class="step-icon">✅</div>
+      <h3 class="step-title">Konfirmasi & DP</h3>
+      <p class="step-desc">Sepakati paket dan jadwal, lakukan DP 50% untuk booking tanggal acaramu bersama Memorléa.</p>
+    </div>
+    <div class="step-card reveal">
+      <span class="step-num">03</span>
+      <div class="step-icon">🎬</div>
+      <h3 class="step-title">Hari H</h3>
+      <p class="step-desc">Tim kami hadir profesional, mengabadikan setiap momen candid dan real-time story yang langsung tayang di hari yang sama.</p>
+    </div>
+    <div class="step-card reveal">
+      <span class="step-num">04</span>
+      <div class="step-icon">📦</div>
+      <h3 class="step-title">File Terkirim</h3>
+      <p class="step-desc">Seluruh file unedited dikirim via Google Drive dalam 48 jam. Kenangan indahmu siap dinikmati selamanya.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Portfolio Preview -->
+<section class="section" style="background:var(--cream)">
+  <div class="section-header reveal">
+    <p class="section-eyebrow">Momen yang Kami Abadikan</p>
+    <h2 class="section-title">Our Portfolio</h2>
+    <p class="section-sub">Setiap pernikahan adalah cerita yang unik dan berharga</p>
+    <div class="divider"></div>
+  </div>
+  <div class="portfolio-grid" id="portfolio-preview">
+    <!-- filled by JS -->
+  </div>
+  <div style="text-align:center;margin-top:3rem">
+    <a href="portfolio.html" class="btn btn-plum-outline reveal">Lihat Semua Portfolio</a>
+  </div>
+</section>
+
+<!-- Testimonials -->
+<section class="section testimonials-section">
+  <div class="section-header reveal">
+    <p class="section-eyebrow">Kata Mereka</p>
+    <h2 class="section-title">What Our Clients Said</h2>
+    <div class="divider"></div>
+  </div>
+  <div class="testimonials-track">
+    <div class="testimonials-inner" id="testimonials-inner">
+      <!-- filled by JS -->
+    </div>
+  </div>
+  <div class="testimonial-nav" id="testimonial-nav"></div>
+</section>
+
+<!-- Instagram CTA -->
+<section class="instagram-section">
+  <div class="reveal">
+    <p class="section-eyebrow" style="color:var(--gold)">Follow Our Journey</p>
+    <h2 class="section-title">Temukan Kami di Instagram</h2>
+    <p class="section-sub">Lihat momen-momen indah yang telah kami abadikan</p>
+    <p class="instagram-handle">@memorlea</p>
+    <a href="https://www.instagram.com/memorlea?igsh=MXNvOTRiZTgyZTAydg%3D%3D&utm_source=qr" target="_blank" rel="noopener" class="btn btn-gold">
+      Kunjungi Instagram
+    </a>
+  </div>
+</section>
+
+<!-- FAQ Preview -->
+<section class="section" style="background:var(--blush)">
+  <div class="section-header reveal">
+    <p class="section-eyebrow">Ada Pertanyaan?</p>
+    <h2 class="section-title">FAQ</h2>
+    <p class="section-sub">Hal-hal yang sering ditanyakan seputar layanan kami</p>
+    <div class="divider"></div>
+  </div>
+  <div class="faq-list" id="faq-preview">
+    <!-- filled by JS (first 3) -->
+  </div>
+  <div style="text-align:center;margin-top:2.5rem">
+    <a href="faq.html" class="btn btn-plum-outline reveal">Lihat Semua FAQ</a>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <img src="assets/images/logo.png" alt="Memorléa"/>
+      <p>Capturing your story, one candid moment at a time.</p>
+      <p style="margin-top:0.5rem;font-size:0.78rem">Based in Jakarta &amp; Cilacap</p>
+    </div>
+    <div>
+      <p class="footer-heading">Navigasi</p>
+      <ul class="footer-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="portfolio.html">Portfolio</a></li>
+        <li><a href="faq.html">FAQ</a></li>
+        <li><a href="form.html">Book Now</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="footer-heading">Kontak</p>
+      <ul class="footer-links">
+        <li><a href="https://wa.me/6285121148620" target="_blank">WhatsApp</a></li>
+        <li><a href="https://www.instagram.com/memorlea" target="_blank">Instagram</a></li>
+        <li><a href="https://www.tiktok.com/@memorleya" target="_blank">TikTok</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 Memorléa · Wedding Content Creator</p>
+    <div class="footer-social">
+      <a href="https://www.instagram.com/memorlea" target="_blank" title="Instagram">IG</a>
+      <a href="https://www.tiktok.com/@memorleya" target="_blank" title="TikTok">TT</a>
+      <a href="https://wa.me/6285121148620" target="_blank" title="WhatsApp">WA</a>
+    </div>
+  </div>
+</footer>
+
+<!-- WA Float -->
+<a href="https://wa.me/6285121148620" target="_blank" class="wa-float" title="Chat via WhatsApp">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+  </svg>
+</a>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

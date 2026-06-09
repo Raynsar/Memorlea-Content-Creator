@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard – Memorléa</title>
+  <link rel="icon" type="image/png" href="assets/images/logo.png"/>
+  <link rel="stylesheet" href="style.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .tabs { display:flex; gap:0; border-bottom:2px solid #f0f0f0; margin-bottom:2rem; }
+    .tab-btn { padding:0.75rem 1.5rem; border:none; background:none; font-size:0.82rem; font-weight:600; color:var(--mid); cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px; transition:all var(--transition); }
+    .tab-btn.active { color:var(--plum); border-bottom-color:var(--plum); }
+    .badge-count { display:inline-flex; align-items:center; justify-content:center; background:var(--plum); color:var(--white); border-radius:50%; width:18px; height:18px; font-size:0.65rem; margin-left:6px; }
+    .analytics-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-bottom:2rem; }
+    @media(max-width:768px){ .analytics-grid{grid-template-columns:1fr} }
+    .mobile-menu-btn { display:none; }
+    @media(max-width:768px){ .mobile-menu-btn{display:block;margin-bottom:1rem} }
+    .invoice-preview { font-family: 'Cormorant Garamond', serif; }
+  </style>
+</head>
+<body class="admin-page">
+
+<!-- Sidebar -->
+<aside class="admin-sidebar" id="admin-sidebar">
+  <div class="admin-sidebar-logo">
+    <img src="assets/images/logo.png" alt="Memorléa"/>
+    <span>Memorléa</span>
+  </div>
+  <ul class="admin-nav">
+    <li><a href="#" class="active" onclick="showSection('dashboard',this)">📊 Dashboard</a></li>
+    <li><a href="#" onclick="showSection('bookings',this)">📋 Bookings</a></li>
+    <li><a href="#" onclick="showSection('analytics',this)">📈 Analytics</a></li>
+    <li><a href="#" onclick="showSection('stats',this)">⚙️ Stats Counter</a></li>
+    <li style="margin-top:2rem; border-top:1px solid rgba(255,255,255,0.1); padding-top:1rem">
+      <a href="index.html">🌐 Lihat Website</a>
+    </li>
+    <li><a href="#" onclick="adminLogout()" style="color:#f87171">🚪 Logout</a></li>
+  </ul>
+</aside>
+
+<!-- Main -->
+<main class="admin-main">
+
+  <!-- Topbar -->
+  <div class="admin-topbar">
+    <h1 id="section-title">Dashboard</h1>
+    <div style="display:flex;gap:0.75rem;align-items:center">
+      <span id="admin-email" style="font-size:0.82rem;color:var(--mid)"></span>
+    </div>
+  </div>
+
+  <!-- DASHBOARD SECTION -->
+  <div class="admin-section active" id="sec-dashboard">
+    <div class="admin-cards" id="summary-cards">
+      <div class="admin-card"><p class="admin-card-label">Total Booking</p><p class="admin-card-value" id="card-total">—</p></div>
+      <div class="admin-card"><p class="admin-card-label">Belum DP</p><p class="admin-card-value" id="card-belum" style="color:#dc2626">—</p></div>
+      <div class="admin-card"><p class="admin-card-label">Sudah DP</p><p class="admin-card-value" id="card-dp" style="color:#ca8a04">—</p></div>
+      <div class="admin-card"><p class="admin-card-label">Lunas / Selesai</p><p class="admin-card-value" id="card-lunas" style="color:#16a34a">—</p></div>
+    </div>
+
+    <div class="admin-chart-wrap">
+      <h2>Booking per Bulan</h2>
+      <canvas id="chart-monthly" height="80"></canvas>
+    </div>
+
+    <div class="analytics-grid">
+      <div class="admin-chart-wrap">
+        <h2>Paket Terpopuler</h2>
+        <canvas id="chart-packages"></canvas>
+      </div>
+      <div class="admin-chart-wrap">
+        <h2>Kota Terbanyak</h2>
+        <canvas id="chart-cities"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOOKINGS SECTION -->
+  <div class="admin-section" id="sec-bookings">
+    <div class="admin-table-wrap">
+      <div class="admin-table-header">
+        <h2>Semua Booking</h2>
+        <div class="admin-controls">
+          <input type="text" class="admin-search" id="search-input" placeholder="Cari nama, kota..." oninput="filterTable()"/>
+          <select class="admin-filter" id="filter-status" onchange="filterTable()">
+            <option value="">Semua Status</option>
+            <option value="belum_dp">Belum DP</option>
+            <option value="sudah_dp">Sudah DP</option>
+            <option value="lunas">Lunas</option>
+            <option value="selesai">Selesai</option>
+          </select>
+          <select class="admin-filter" id="filter-city" onchange="filterTable()">
+            <option value="">Semua Kota</option>
+          </select>
+          <button class="action-btn action-edit" onclick="exportToSheets()">📤 Export Sheets</button>
+          <button class="action-btn" style="background:#fee2e2;color:#dc2626" onclick="confirmArchive()">🗂 Archive</button>
+        </div>
+      </div>
+      <div style="overflow-x:auto">
+        <table>
+          <thead>
+            <tr>
+              <th>Nama Pengantin</th>
+              <th>Tanggal Wedding</th>
+              <th>Paket</th>
+              <th>Kota</th>
+              <th>Status</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="bookings-tbody">
+            <tr><td colspan="6" style="text-align:center;color:var(--mid);padding:3rem">Memuat data...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ANALYTICS SECTION -->
+  <div class="admin-section" id="sec-analytics">
+    <div class="admin-chart-wrap">
+      <h2>Booking per Bulan (Detail)</h2>
+      <canvas id="chart-monthly-2" height="80"></canvas>
+    </div>
+    <div class="analytics-grid">
+      <div class="admin-chart-wrap"><h2>Distribusi Paket</h2><canvas id="chart-packages-2"></canvas></div>
+      <div class="admin-chart-wrap"><h2>Distribusi Kota</h2><canvas id="chart-cities-2"></canvas></div>
+    </div>
+  </div>
+
+  <!-- STATS SECTION -->
+  <div class="admin-section" id="sec-stats">
+    <div class="admin-table-wrap" style="padding:2rem">
+      <h2 style="font-family:var(--font-display);font-size:1.1rem;font-weight:600;color:var(--plum-dark);margin-bottom:1.5rem">
+        Edit Stats Counter (Landing Page)
+      </h2>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;max-width:480px">
+        <div class="form-group"><label>Jumlah Client</label><input type="number" id="stat-clients" min="0"/></div>
+        <div class="form-group"><label>Jumlah Vendor</label><input type="number" id="stat-vendors" min="0"/></div>
+        <div class="form-group"><label>Jumlah Kota</label><input type="number" id="stat-cities" min="0"/></div>
+        <div class="form-group"><label>Jumlah Crew</label><input type="number" id="stat-crew" min="0"/></div>
+      </div>
+      <button class="btn btn-primary" onclick="saveStats()" style="margin-top:0.5rem">Simpan Stats</button>
+      <p id="stats-msg" style="font-size:0.82rem;color:#16a34a;margin-top:0.75rem;display:none">✓ Stats berhasil disimpan!</p>
+    </div>
+  </div>
+
+</main>
+
+<!-- Modal Edit Booking -->
+<div class="modal-overlay" id="edit-modal">
+  <div class="modal">
+    <h3>Update Status Booking</h3>
+    <p id="modal-name" style="font-family:var(--font-display);font-size:1.1rem;color:var(--plum);margin-bottom:1.5rem"></p>
+    <div class="form-group">
+      <label>Status Pembayaran</label>
+      <select id="modal-status">
+        <option value="belum_dp">🔴 Belum DP</option>
+        <option value="sudah_dp">🟡 Sudah DP</option>
+        <option value="lunas">🟢 Lunas</option>
+        <option value="selesai">🔵 Selesai</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="action-btn action-edit" onclick="closeModal()">Batal</button>
+      <button class="btn btn-primary" onclick="saveStatus()" style="padding:0.5rem 1.5rem">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Archive -->
+<div class="modal-overlay" id="archive-modal">
+  <div class="modal">
+    <h3>Archive Data</h3>
+    <p style="font-size:0.88rem;color:var(--mid);line-height:1.7">
+      Semua data booking akan di-archive. Data yang sudah di-archive tidak akan muncul di tabel utama.<br/><br/>
+      Pastikan sudah di-export ke Google Sheets terlebih dahulu sebelum archive.
+    </p>
+    <div class="modal-actions">
+      <button class="action-btn action-edit" onclick="closeArchiveModal()">Batal</button>
+      <button class="btn" style="background:#dc2626;color:white;padding:0.5rem 1.5rem" onclick="archiveAll()">Archive Semua</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Book Now – Memorléa</title>
+  <meta name="description" content="Isi formulir konsultasi untuk mendapatkan akses pricelist dan konsultasi gratis bersama Memorléa."/>
+  <link rel="icon" type="image/png" href="assets/images/logo.png"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<div id="loading-screen">
+  <img src="assets/images/logo.png" alt="Memorléa"/>
+  <p>Memorléa</p>
+</div>
+<div class="page-transition" id="page-transition"></div>
+
+<nav class="navbar scrolled" id="navbar">
+  <a href="index.html" class="navbar-logo" style="text-decoration:none">
+    <img src="assets/images/logo.png" alt="Memorléa"/>
+    <span>Memorléa</span>
+  </a>
+  <ul class="navbar-links" id="navbar-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="portfolio.html">Portfolio</a></li>
+    <li><a href="faq.html">FAQ</a></li>
+    <li><a href="form.html" class="nav-cta active">Book Now</a></li>
+    <li><a href="admin-login.html" class="nav-admin-link" title="Admin">⚙</a></li>
+  </ul>
+  <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<main class="form-page">
+  <div class="form-container">
+    <div class="form-header">
+      <img src="assets/images/logo.png" alt="Memorléa"/>
+      <h1 class="form-title">Formulir Konsultasi</h1>
+      <p class="form-sub">Silakan isi formulir berikut untuk mendapatkan akses pricelist dan konsultasi gratis</p>
+    </div>
+
+    <form id="booking-form" novalidate>
+      <div class="form-group">
+        <label for="couple_name">Nama Pengantin <span>*</span></label>
+        <input type="text" id="couple_name" name="couple_name" placeholder="Contoh: Jak & J" required maxlength="100"/>
+        <p class="form-error" id="err-couple_name">Nama pengantin wajib diisi</p>
+      </div>
+
+      <div class="form-grid-2">
+        <div class="form-group">
+          <label for="email">Email <span>*</span></label>
+          <input type="email" id="email" name="email" placeholder="your@email.com" required/>
+          <p class="form-error" id="err-email">Masukkan email yang valid</p>
+        </div>
+        <div class="form-group">
+          <label for="phone">No. HP / WhatsApp</label>
+          <input type="tel" id="phone" name="phone" placeholder="08xxxxxxxxxx" maxlength="15"/>
+          <p class="form-error" id="err-phone">Format nomor tidak valid</p>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="wedding_date">Tanggal Wedding <span>*</span></label>
+        <input type="date" id="wedding_date" name="wedding_date" required/>
+        <p class="form-error" id="err-wedding_date">Tanggal wedding wajib diisi</p>
+      </div>
+
+      <div class="form-grid-2">
+        <div class="form-group">
+          <label for="package">Service Package yang Diminati <span>*</span></label>
+          <select id="package" name="package" required>
+            <option value="">— Pilih Paket —</option>
+            <optgroup label="Wedding Packages">
+              <option value="luxury">Luxury Wedding – Rp1.750.000</option>
+              <option value="parelta">Parelta Package – Rp1.000.000</option>
+              <option value="tara">Tara Package – Rp725.000</option>
+              <option value="sean">Sean Package – Rp575.000</option>
+            </optgroup>
+            <optgroup label="Event Packages">
+              <option value="prewedding">Pre-Wedding – Rp450.000</option>
+              <option value="nonwedding">Non-Wedding – Rp400.000</option>
+            </optgroup>
+          </select>
+          <p class="form-error" id="err-package">Paket wajib dipilih</p>
+        </div>
+        <div class="form-group">
+          <label for="city">Kota <span>*</span></label>
+          <select id="city" name="city" required>
+            <option value="">— Pilih Kota —</option>
+            <option>Jakarta</option>
+            <option>Bogor</option>
+            <option>Depok</option>
+            <option>Tangerang</option>
+            <option>Bekasi</option>
+            <option>Cilacap</option>
+            <option>Bandung</option>
+            <option>Surabaya</option>
+            <option>Yogyakarta</option>
+            <option>Semarang</option>
+            <option>Medan</option>
+            <option>Bali</option>
+            <option>Lainnya</option>
+          </select>
+          <p class="form-error" id="err-city">Kota wajib dipilih</p>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="venue">Lokasi / Venue</label>
+        <input type="text" id="venue" name="venue" placeholder="Contoh: MOG, Ritz Carlton, dll" maxlength="150"/>
+      </div>
+
+      <div class="form-group">
+        <label for="notes">Detail Acara / Kebutuhan Khusus</label>
+        <textarea id="notes" name="notes" placeholder="Jelaskan detail acara, tema, jumlah tamu, kebutuhan khusus, dll" maxlength="1000"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="source">Dari mana Anda mengetahui layanan kami?</label>
+        <select id="source" name="source">
+          <option value="">— Pilih —</option>
+          <option>Instagram</option>
+          <option>TikTok</option>
+          <option>Rekomendasi teman</option>
+          <option>Google</option>
+          <option>Vendor / WO</option>
+          <option>Lainnya</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <div class="consent-wrap" onclick="toggleConsent()">
+          <div class="custom-checkbox" id="custom-checkbox">
+            <svg id="check-icon" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:none;width:12px;height:10px">
+              <path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <input type="checkbox" id="consent" name="consent" style="position:absolute;opacity:0;width:0;height:0"/>
+          <span class="consent-label">Saya setuju untuk dihubungi mengenai layanan wedding content creator dan bersedia menerima pricelist <span style="color:#e53e3e">*</span></span>
+        </div>
+        <p class="form-error" id="err-consent">Persetujuan wajib dicentang</p>
+      </div>
+
+      <button type="submit" class="form-submit" id="submit-btn">
+        Dapatkan Pricelist &amp; Konsultasi Gratis
+      </button>
+      <p class="rate-limit-msg" id="rate-limit-msg" style="display:none">Terlalu banyak permintaan. Coba lagi dalam beberapa menit.</p>
+      <p id="form-error-msg" style="display:none;text-align:center;font-size:0.82rem;color:#e53e3e;margin-top:0.75rem"></p>
+    </form>
+  </div>
+</main>
+
+<a href="https://wa.me/6285121148620" target="_blank" class="wa-float" title="Chat via WhatsApp">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+</a>
+
+<div class="toast" id="toast"></div>
+
+<style>
+.consent-wrap {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+.custom-checkbox {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  border: 2px solid var(--lavender);
+  background: var(--cream);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1px;
+  transition: all 0.2s ease;
+}
+.custom-checkbox.checked {
+  background: var(--plum);
+  border-color: var(--plum);
+}
+.consent-label {
+  font-size: 0.85rem;
+  color: var(--mid);
+  line-height: 1.6;
+}
+</style>
+<script>
+function toggleConsent() {
+  const cb = document.getElementById('consent');
+  const box = document.getElementById('custom-checkbox');
+  const icon = document.getElementById('check-icon');
+  cb.checked = !cb.checked;
+  box.classList.toggle('checked', cb.checked);
+  icon.style.display = cb.checked ? 'block' : 'none';
+  // hapus error saat dicentang
+  if (cb.checked) {
+    const err = document.getElementById('err-consent');
+    if (err) err.classList.remove('show');
+  }
+}
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase.js"></script>
+<script src="js/form.js"></script>
+</body>
+</html>

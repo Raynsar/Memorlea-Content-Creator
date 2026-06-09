@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Login – Memorléa</title>
+  <link rel="icon" type="image/png" href="assets/images/logo.png"/>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    body { background: linear-gradient(135deg, var(--plum-dark) 0%, var(--plum) 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1rem; }
+    .login-card { background: var(--white); border-radius: var(--radius-lg); padding: 3.5rem 3rem; max-width: 420px; width: 100%; box-shadow: var(--shadow-md); text-align: center; }
+    .login-card img { height: 64px; margin: 0 auto 0.5rem; }
+    .login-title { font-family: var(--font-script); font-size: 2.5rem; color: var(--plum); }
+    .login-sub { font-size: 0.82rem; color: var(--mid); margin-top: 0.3rem; margin-bottom: 2rem; }
+    .login-error { background: #fee2e2; color: #dc2626; border-radius: var(--radius-sm); padding: 0.75rem 1rem; font-size: 0.82rem; margin-bottom: 1rem; display: none; }
+    .login-error.show { display: block; }
+  </style>
+</head>
+<body>
+
+<div class="login-card">
+  <a href="index.html"><img src="assets/images/logo.png" alt="Memorléa" style="height:64px;margin:0 auto 0.5rem;display:block"/></a>
+  <h1 class="login-title">Admin Panel</h1>
+  <p class="login-sub">Masuk untuk mengelola booking Memorléa</p>
+
+  <div class="login-error" id="login-error">Email atau password salah.</div>
+
+  <form id="login-form">
+    <div class="form-group" style="text-align:left">
+      <label for="email">Email</label>
+      <input type="email" id="email" placeholder="admin@memorlea.com" required/>
+    </div>
+    <div class="form-group" style="text-align:left">
+      <label for="password">Password</label>
+      <input type="password" id="password" placeholder="••••••••" required/>
+    </div>
+    <button type="submit" class="form-submit" id="login-btn">Masuk</button>
+  </form>
+
+  <p style="margin-top:1.5rem;font-size:0.78rem;color:var(--mid)">
+    <a href="index.html" style="color:var(--plum);font-weight:500">← Kembali ke Website</a>
+  </p>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase.js"></script>
+<script src="js/admin-login.js"></script>
+</body>
+</html>

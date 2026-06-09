@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pricelist 2026 – Memorléa</title>
+  <link rel="icon" type="image/png" href="assets/images/logo.png"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<div id="loading-screen">
+  <img src="assets/images/logo.png" alt="Memorléa"/>
+  <p>Memorléa</p>
+</div>
+<div class="page-transition" id="page-transition"></div>
+
+<nav class="navbar scrolled" id="navbar">
+  <a href="index.html" class="navbar-logo" style="text-decoration:none">
+    <img src="assets/images/logo.png" alt="Memorléa"/>
+    <span>Memorléa</span>
+  </a>
+  <ul class="navbar-links" id="navbar-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="portfolio.html">Portfolio</a></li>
+    <li><a href="faq.html">FAQ</a></li>
+    <li><a href="form.html" class="nav-cta">Book Now</a></li>
+    <li><a href="admin-login.html" class="nav-admin-link" title="Admin">⚙</a></li>
+  </ul>
+  <div class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+</nav>
+
+<main class="pricelist-page" id="pricelist-content" style="display:none">
+
+  <!-- Cover -->
+  <div class="pricelist-cover">
+    <img src="assets/images/hero2.jpg" alt="Pricelist Cover"/>
+    <div class="pricelist-cover-overlay">
+      <div class="pricelist-cover-logo">
+        <img src="assets/images/logo.png" alt="Memorléa"/>
+      </div>
+      <p class="pricelist-cover-title">Price Guide</p>
+      <p class="pricelist-cover-year">FOR 2026</p>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="pricelist-actions">
+    <a href="https://wa.me/6285121148620" target="_blank" class="btn btn-primary" id="wa-contact-btn">
+      📱 Chat via WhatsApp
+    </a>
+    <a href="assets/Pricelist_Memorlea_2026.pdf" download class="btn btn-plum-outline">
+      ⬇ Download Pricelist
+    </a>
+  </div>
+
+  <!-- Luxury Wedding -->
+  <div class="pricelist-section">
+    <h2 class="pricelist-section-title">Luxury Wedding</h2>
+    <div class="packages-grid" style="max-width:480px;margin:0 auto">
+      <div class="package-card featured">
+        <div class="package-header">
+          <p class="package-name">Luxury Wedding</p>
+          <p class="package-coverage">Preparation + Akad/Pemberkatan + Reception/Adat</p>
+          <p style="font-size:0.72rem;color:var(--lavender-lt);margin-top:0.3rem">*Cocok untuk Batak Wedding atau Luxury Wedding</p>
+          <div class="package-price">
+            <p class="package-price-old">Rp2.100.000</p>
+            <p class="package-price-new">Rp1.750.000</p>
+          </div>
+        </div>
+        <div class="package-body">
+          <ul class="package-features">
+            <li>8–9 jam standby</li>
+            <li>1x online meeting concept</li>
+            <li>Free Instagram takeovers</li>
+            <li>2 crew content creator</li>
+            <li>Hingga <strong>25 edited IG Story</strong> (15 Real Time, 10 Same Day | Mix Photos & Videos)</li>
+            <li>2 Highlight Moments (edited, 15 & 30s)</li>
+            <li>1 Recap Video</li>
+            <li>Banyak Candid Photos</li>
+            <li>3 TikTok trend videos (by request)</li>
+            <li>Semua video unedited dalam 48 jam</li>
+            <li style="color:#dc2626">Belum termasuk biaya transport</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Wedding Packages -->
+  <div class="pricelist-section">
+    <h2 class="pricelist-section-title">Wedding Packages</h2>
+    <p style="text-align:center;font-size:0.85rem;color:var(--mid);margin-bottom:2rem">
+      Semua paket sudah termasuk 1 crew content creator, free Instagram takeover, bonus candid photos,<br/>
+      dan semua video unedited dikirim dalam 48 jam. Biaya transportasi belum termasuk.
+    </p>
+    <div class="packages-grid">
+
+      <div class="package-card featured">
+        <span class="package-badge">Best Seller</span>
+        <div class="package-header">
+          <p class="package-name">Parelta</p>
+          <p class="package-coverage">Preparation + Akad/Pemberkatan + Reception/Adat</p>
+          <div class="package-price">
+            <p class="package-price-old">Rp1.400.000</p>
+            <p class="package-price-new">Rp1.000.000</p>
+          </div>
+        </div>
+        <div class="package-body">
+          <ul class="package-features">
+            <li>8 jam standby</li>
+            <li>Hingga <strong>20 edited IG Story</strong> (15 Real Time, 5 Same Day)</li>
+            <li>1 Recap Video</li>
+            <li>2 Highlight Moments (edited 30s, 15s)</li>
+            <li>3 TikTok trend videos (by request)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="package-card">
+        <div class="package-header">
+          <p class="package-name">Tara</p>
+          <p class="package-coverage">Akad/Pemberkatan + Reception/Adat<br/>*Tanpa preparation</p>
+          <div class="package-price">
+            <p class="package-price-old">Rp1.000.000</p>
+            <p class="package-price-new">Rp725.000</p>
+          </div>
+        </div>
+        <div class="package-body">
+          <ul class="package-features">
+            <li>6 jam standby</li>
+            <li>Hingga <strong>15 edited IG Story</strong> (10 Real Time, 5 Same Day)</li>
+            <li>2 Highlight Moments (edited 30s, 15s)</li>
+            <li>2 TikTok trend videos (by request)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="package-card">
+        <div class="package-header">
+          <p class="package-name">Sean</p>
+          <p class="package-coverage">Akad/Pemberkatan atau Reception Only</p>
+          <div class="package-price">
+            <p class="package-price-old">Rp750.000</p>
+            <p class="package-price-new">Rp575.000</p>
+          </div>
+        </div>
+        <div class="package-body">
+          <ul class="package-features">
+            <li>4 jam standby</li>
+            <li>Hingga <strong>10 IG Story</strong> (Real Time)</li>
+            <li>1 Recap Video</li>
+            <li>2 TikTok trend videos (by request)</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Event Packages -->
+  <div class="pricelist-section">
+    <h2 class="pricelist-section-title">Event Packages</h2>
+    <div class="packages-grid" style="max-width:640px;margin:0 auto">
+
+      <div class="package-card">
+        <div class="package-header">
+          <p class="package-name">Pre-Wedding</p>
+          <p class="package-coverage">Engagement, Bridal Shower, Siraman, Sangjit, Prewedd Photoshoot, dll</p>
+          <div class="package-price">
+            <p class="package-price-old">Rp600.000</p>
+            <p class="package-price-new">Rp450.000</p>
+          </div>
+        </div>
+        <div class="package-body">
+          <ul class="package-features">
+            <li>3 jam standby</li>
+            <li>Hingga 7 IG Story (Same Day)</li>
+            <li>1 Recap Video</li>
+            <li>1 Highlight Moment (edited 30s)</li>
+            <li>2 TikTok trend videos (by request)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="package-card">
+        <div class="package-header">
+          <p class="package-name">Non Wedding</p>
+          <p class="package-coverage">Graduation, Birthday, Gathering, dll</p>
+          <div class="package-price">
+            <p class="package-price-old">Rp500.000</p>
+            <p class="package-price-new">Rp400.000</p>
+          </div>
+        </div>
+        <div class="package-body">
+          <ul class="package-features">
+            <li>2 jam standby</li>
+            <li>1 Recap Video</li>
+            <li>2 Highlight Moments (edited 30s, 15s)</li>
+            <li>2 TikTok trend videos (by request)</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Add-ons -->
+  <div class="pricelist-section">
+    <h2 class="pricelist-section-title">Additional Add-ons</h2>
+    <div class="addons-grid">
+      <div class="addon-card">
+        <p class="addon-title">Extended Coverage Hours</p>
+        <p class="addon-price">Rp125.000 / jam</p>
+      </div>
+      <div class="addon-card">
+        <p class="addon-title">Early Morning Coverage</p>
+        <p class="addon-price">Rp100.000 / jam</p>
+        <p class="addon-note">Mulai sebelum pukul 06.00</p>
+      </div>
+      <div class="addon-card">
+        <p class="addon-title">Additional Crew Member</p>
+        <p class="addon-price">Rp400K – Rp800K</p>
+        <p class="addon-note">Per crew, berdasarkan durasi</p>
+      </div>
+      <div class="addon-card">
+        <p class="addon-title">Extra Highlight Moment</p>
+        <p class="addon-price">Rp50.000</p>
+      </div>
+      <div class="addon-card">
+        <p class="addon-title">TikTok Trend Recreation</p>
+        <p class="addon-price">Rp50.000</p>
+      </div>
+      <div class="addon-card">
+        <p class="addon-title">Landscape Format Output</p>
+        <p class="addon-price">Rp400.000</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- T&C -->
+  <div class="pricelist-section">
+    <h2 class="pricelist-section-title">Terms &amp; Conditions</h2>
+    <div class="tnc-box">
+      <h4>Booking &amp; Pembayaran</h4>
+      <ul>
+        <li>Wajib DP 50% untuk booking tanggal, pelunasan maksimal H-3 sebelum acara.</li>
+        <li>DP bersifat non-refundable jika pembatalan dilakukan oleh klien. Force Majeure akan didiskusikan bersama.</li>
+        <li>Reschedule hanya 1x, sesuai ketersediaan tim.</li>
+      </ul>
+      <h4>Jadwal &amp; Rundown</h4>
+      <ul>
+        <li>Jam di form = jam mulai shooting.</li>
+        <li>Klien wajib mengirim rundown final &amp; referensi konten maksimal H-2.</li>
+        <li>Klien wajib menginformasikan WO/vendor terkait penggunaan jasa Memorléa.</li>
+      </ul>
+      <h4>Durasi &amp; Additional Hours</h4>
+      <ul>
+        <li>Kelebihan waktu lebih dari 30 menit akan dikenakan biaya tambahan setara 1 jam kerja.</li>
+      </ul>
+      <h4>Konten &amp; Hak Penggunaan</h4>
+      <ul>
+        <li>Konten dapat digunakan untuk promosi, kecuali klien menyampaikan keberatan secara tertulis.</li>
+      </ul>
+      <h4>Transportasi</h4>
+      <ul>
+        <li>Seluruh harga belum termasuk biaya transportasi, disesuaikan dengan lokasi acara.</li>
+      </ul>
+      <h4>Pengiriman File</h4>
+      <ul>
+        <li>File dikirim via Google Drive dengan masa aktif link <strong>2 minggu</strong> sejak tanggal pengiriman.</li>
+      </ul>
+    </div>
+  </div>
+
+</main>
+
+<!-- Gate: redirect jika tidak ada token -->
+<div id="gate-overlay" style="display:none;position:fixed;inset:0;background:var(--plum-dark);z-index:9999;display:flex;align-items:center;justify-content:center;text-align:center;padding:2rem">
+  <div style="background:white;border-radius:28px;padding:3rem 2.5rem;max-width:440px">
+    <img src="assets/images/logo.png" style="height:60px;margin:0 auto 1rem"/>
+    <h2 style="font-family:'Great Vibes',cursive;font-size:2.5rem;color:#4A2545">Akses Terbatas</h2>
+    <p style="font-size:0.9rem;color:#6B6B6B;margin-top:0.75rem;line-height:1.7">Pricelist hanya bisa diakses setelah mengisi formulir konsultasi. Yuk isi dulu!</p>
+    <a href="form.html" style="display:inline-block;margin-top:1.5rem;padding:0.85rem 2rem;background:#4A2545;color:white;border-radius:28px;font-size:0.82rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase">Isi Formulir Sekarang</a>
+  </div>
+</div>
+
+<a href="https://wa.me/6285121148620" target="_blank" class="wa-float">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+</a>
+
+<script src="js/pricelist.js"></script>
+</body>
+</html>
