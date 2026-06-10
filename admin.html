@@ -81,6 +81,12 @@
     </li>
     <li><a href="#" onclick="showSection('kalender',this)">📅 Kalender</a></li>
     <li><a href="#" onclick="showSection('analytics',this)">📈 Analytics</a></li>
+    <li>
+      <a href="#" onclick="showSection('kru',this)">
+        👥 Kru
+        <span class="nav-badge hidden" id="badge-kru-aktif">0</span>
+      </a>
+    </li>
     <li><a href="#" onclick="showSection('stats',this)">⚙️ Stats Counter</a></li>
     <li style="margin-top:2rem;border-top:1px solid rgba(255,255,255,0.1);padding-top:1rem">
       <a href="index.html">🌐 Lihat Website</a>
@@ -230,7 +236,163 @@
     </div>
   </div>
 
+  <!-- ── KRU ── -->
+  <div class="admin-section" id="sec-kru">
+
+    <!-- Summary kru -->
+    <div class="admin-cards" style="grid-template-columns:repeat(3,1fr);margin-bottom:1.5rem">
+      <div class="admin-card"><p class="admin-card-label">Total Kru</p><p class="admin-card-value" id="kru-total">—</p></div>
+      <div class="admin-card"><p class="admin-card-label">Aktif</p><p class="admin-card-value" id="kru-aktif" style="color:#16a34a">—</p></div>
+      <div class="admin-card"><p class="admin-card-label">Nonaktif</p><p class="admin-card-value" id="kru-nonaktif" style="color:#dc2626">—</p></div>
+    </div>
+
+    <!-- Tabel kru -->
+    <div class="admin-table-wrap">
+      <div class="admin-table-header">
+        <h2>Data Kru</h2>
+        <div class="admin-controls">
+          <select class="admin-filter" id="filter-kru-status" onchange="filterKru()">
+            <option value="">Semua Status</option>
+            <option value="aktif">Aktif</option>
+            <option value="nonaktif">Nonaktif</option>
+          </select>
+          <button class="btn btn-primary" style="padding:0.45rem 1.2rem;font-size:0.78rem" onclick="openAddKruModal()">+ Tambah Kru</button>
+        </div>
+      </div>
+      <div style="overflow-x:auto">
+        <table>
+          <thead>
+            <tr>
+              <th>Nama Kru</th>
+              <th>Kota</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th>Jadwal Mendatang</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="kru-tbody">
+            <tr><td colspan="6" style="text-align:center;color:var(--mid);padding:3rem">Memuat data...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
 </main>
+
+<!-- ── MODAL: Tambah / Edit Kru ── -->
+<div class="modal-overlay" id="kru-modal">
+  <div class="modal" style="max-width:480px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
+      <h3 id="kru-modal-title">Tambah Kru</h3>
+      <button onclick="closeKruModal()" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--mid)">×</button>
+    </div>
+    <div class="form-group">
+      <label>Nama Kru <span style="color:#e53e3e">*</span></label>
+      <input type="text" id="kru-name" placeholder="Nama lengkap kru" maxlength="100"/>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+      <div class="form-group">
+        <label>No. HP / WhatsApp</label>
+        <input type="tel" id="kru-phone" placeholder="08xxxxxxxxxx" maxlength="15"/>
+      </div>
+      <div class="form-group">
+        <label>Kota</label>
+        <select id="kru-city">
+          <option value="">— Pilih Kota —</option>
+          <option>Jakarta</option>
+          <option>Cilacap</option>
+          <option>Bogor</option>
+          <option>Depok</option>
+          <option>Tangerang</option>
+          <option>Bekasi</option>
+          <option>Bandung</option>
+          <option>Surabaya</option>
+          <option>Lainnya</option>
+        </select>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+      <div class="form-group">
+        <label>Role</label>
+        <select id="kru-role">
+          <option>Content Creator</option>
+          <option>Lead Content Creator</option>
+          <option>Videographer</option>
+          <option>Photographer</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Status</label>
+        <select id="kru-status">
+          <option value="aktif">Aktif</option>
+          <option value="nonaktif">Nonaktif</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Catatan</label>
+      <textarea id="kru-notes" rows="2" placeholder="Catatan tambahan..." style="width:100%;padding:0.75rem;border:1.5px solid var(--lavender);border-radius:6px;font-family:var(--font-body);font-size:0.85rem;resize:vertical;outline:none"></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="action-btn action-edit" onclick="closeKruModal()">Batal</button>
+      <button class="btn btn-primary" onclick="saveKru()" style="padding:0.5rem 1.5rem">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL: Detail Kru + Jadwal ── -->
+<div class="modal-overlay" id="kru-detail-modal">
+  <div class="modal" style="max-width:520px">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.5rem">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="kru-avatar" id="kru-detail-avatar">A</div>
+        <div>
+          <h3 id="kru-detail-name" style="font-family:var(--font-display);font-size:1.3rem;color:var(--plum)"></h3>
+          <p id="kru-detail-role" style="font-size:0.8rem;color:var(--mid)"></p>
+        </div>
+      </div>
+      <button onclick="closeKruDetailModal()" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--mid)">×</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:1.5rem">
+      <div><label style="font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--mid);display:block;margin-bottom:3px">No. HP</label><p id="kru-detail-phone" style="font-size:0.88rem;font-weight:500"></p></div>
+      <div><label style="font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--mid);display:block;margin-bottom:3px">Kota</label><p id="kru-detail-city" style="font-size:0.88rem;font-weight:500"></p></div>
+      <div><label style="font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--mid);display:block;margin-bottom:3px">Status</label><p id="kru-detail-status"></p></div>
+      <div><label style="font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--mid);display:block;margin-bottom:3px">Total Jadwal</label><p id="kru-detail-total-jadwal" style="font-size:0.88rem;font-weight:500;color:var(--plum)"></p></div>
+    </div>
+    <div>
+      <label style="font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--mid);display:block;margin-bottom:8px">Jadwal Mendatang</label>
+      <div class="kru-jadwal-list" id="kru-detail-jadwal"></div>
+    </div>
+    <div style="display:flex;gap:0.75rem;margin-top:1.5rem;flex-wrap:wrap">
+      <button class="action-btn action-edit" onclick="editKruFromDetail()">✏️ Edit Kru</button>
+      <a id="kru-detail-wa" href="#" target="_blank" class="action-btn action-wa">💬 WA Kru</a>
+      <button class="action-btn action-delete" onclick="deleteKruFromDetail()">🗑️ Hapus</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL: Assign Kru ke Booking ── -->
+<div class="modal-overlay" id="assign-kru-modal">
+  <div class="modal" style="max-width:500px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
+      <h3>Assign Kru ke Booking</h3>
+      <button onclick="closeAssignKruModal()" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--mid)">×</button>
+    </div>
+    <p id="assign-booking-name" style="font-family:var(--font-display);font-size:1rem;color:var(--plum);margin-bottom:4px"></p>
+    <p id="assign-booking-date" style="font-size:0.82rem;color:var(--mid);margin-bottom:1.5rem"></p>
+
+    <label style="font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--mid);display:block;margin-bottom:8px">Pilih Kru</label>
+    <div id="assign-kru-list" style="display:flex;flex-direction:column;gap:8px;max-height:280px;overflow-y:auto"></div>
+
+    <div style="margin-top:1.5rem;display:flex;gap:0.75rem;justify-content:flex-end">
+      <button class="action-btn action-edit" onclick="closeAssignKruModal()">Batal</button>
+      <button class="btn btn-primary" onclick="saveAssignKru()" style="padding:0.5rem 1.5rem">Simpan Assignment</button>
+    </div>
+  </div>
+</div>
 
 <!-- ── MODAL: Detail Booking ── -->
 <div class="modal-overlay" id="detail-modal">
@@ -273,6 +435,12 @@
         <label>🕐 Riwayat Status</label>
         <div id="d-status-log" style="display:flex;flex-direction:column;gap:0.4rem;max-height:160px;overflow-y:auto"></div>
       </div>
+
+      <!-- Kru yang Ditugaskan -->
+      <div class="detail-item full">
+        <label>👥 Kru Ditugaskan</label>
+        <div id="d-assigned-kru" style="display:flex;flex-wrap:wrap;gap:8px;min-height:32px"></div>
+      </div>
     </div>
 
     <div style="display:flex;gap:0.75rem;flex-wrap:wrap;margin-top:0.5rem">
@@ -280,6 +448,7 @@
       <button class="action-btn" style="background:#fef9c3;color:#92400e" onclick="printInvoiceFromDetail()">🖨️ Print Invoice</button>
       <a id="d-wa-link" href="#" target="_blank" class="action-btn" style="background:#dcfce7;color:#16a34a;text-decoration:none">💬 WA Klien</a>
       <button class="action-btn" style="background:#f0f4ff;color:#2563eb" onclick="openWATemplate()">📋 Template WA</button>
+      <button class="action-btn" style="background:#ede6f5;color:#4a2545" onclick="openAssignKruModal()">👥 Assign Kru</button>
     </div>
   </div>
 </div>
