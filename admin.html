@@ -8,15 +8,59 @@
   <link rel="stylesheet" href="style.css"/>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    .tabs { display:flex; gap:0; border-bottom:2px solid #f0f0f0; margin-bottom:2rem; }
-    .tab-btn { padding:0.75rem 1.5rem; border:none; background:none; font-size:0.82rem; font-weight:600; color:var(--mid); cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px; transition:all var(--transition); }
-    .tab-btn.active { color:var(--plum); border-bottom-color:var(--plum); }
-    .badge-count { display:inline-flex; align-items:center; justify-content:center; background:var(--plum); color:var(--white); border-radius:50%; width:18px; height:18px; font-size:0.65rem; margin-left:6px; }
-    .analytics-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-bottom:2rem; }
-    @media(max-width:768px){ .analytics-grid{grid-template-columns:1fr} }
-    .mobile-menu-btn { display:none; }
-    @media(max-width:768px){ .mobile-menu-btn{display:block;margin-bottom:1rem} }
-    .invoice-preview { font-family: 'Cormorant Garamond', serif; }
+    /* ── TABS ── */
+    .tabs{display:flex;gap:0;border-bottom:2px solid #f0f0f0;margin-bottom:2rem}
+    .tab-btn{padding:0.75rem 1.5rem;border:none;background:none;font-size:0.82rem;font-weight:600;color:var(--mid);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all var(--transition)}
+    .tab-btn.active{color:var(--plum);border-bottom-color:var(--plum)}
+
+    /* ── ANALYTICS GRID ── */
+    .analytics-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:2rem}
+    @media(max-width:768px){.analytics-grid{grid-template-columns:1fr}}
+
+    /* ── DETAIL MODAL ── */
+    .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem 1.5rem;margin-bottom:1.5rem}
+    .detail-item label{font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--mid);display:block;margin-bottom:3px}
+    .detail-item p{font-size:0.88rem;color:var(--charcoal);font-weight:500}
+    .detail-item.full{grid-column:1/-1}
+    .detail-notes{background:var(--blush);border-radius:var(--radius-sm);padding:0.75rem 1rem;font-size:0.85rem;line-height:1.7;color:var(--mid);white-space:pre-wrap}
+
+    /* ── BADGE NOTIFIKASI ── */
+    .nav-badge{display:inline-flex;align-items:center;justify-content:center;background:#dc2626;color:#fff;border-radius:50%;width:18px;height:18px;font-size:0.65rem;font-weight:700;margin-left:6px;flex-shrink:0}
+    .nav-badge.hidden{display:none}
+
+    /* ── KALENDER ── */
+    .calendar-wrap{background:var(--white);border-radius:var(--radius-md);padding:2rem;box-shadow:0 2px 12px rgba(0,0,0,0.06);margin-bottom:2rem}
+    .calendar-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+    .calendar-header h2{font-family:var(--font-display);font-size:1.2rem;font-weight:600;color:var(--plum-dark)}
+    .calendar-nav{display:flex;gap:0.5rem}
+    .cal-nav-btn{width:32px;height:32px;border-radius:50%;border:1.5px solid var(--lavender);background:none;cursor:pointer;font-size:0.9rem;color:var(--plum);transition:all var(--transition);display:flex;align-items:center;justify-content:center}
+    .cal-nav-btn:hover{background:var(--plum);color:white;border-color:var(--plum)}
+    .calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+    .cal-day-label{text-align:center;font-size:0.7rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--mid);padding:0.4rem 0}
+    .cal-day{min-height:52px;border-radius:var(--radius-sm);padding:6px;position:relative;background:#fafafa;border:1px solid transparent;transition:all var(--transition);cursor:default}
+    .cal-day.other-month{opacity:0.3}
+    .cal-day.today{border-color:var(--gold);background:var(--gold-lt);}
+    .cal-day.has-booking{background:var(--lavender-lt);border-color:var(--lavender);cursor:pointer}
+    .cal-day.has-booking:hover{background:var(--lavender);transform:scale(1.04)}
+    .cal-day-num{font-size:0.78rem;font-weight:600;color:var(--charcoal)}
+    .cal-day.today .cal-day-num{color:var(--plum);font-weight:700}
+    .cal-booking-dot{display:flex;flex-direction:column;gap:2px;margin-top:3px}
+    .cal-booking-chip{font-size:0.6rem;font-weight:600;padding:1px 5px;border-radius:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+    .chip-belum_dp{background:#fee2e2;color:#dc2626}
+    .chip-sudah_dp{background:#fef9c3;color:#ca8a04}
+    .chip-lunas{background:#dcfce7;color:#16a34a}
+    .chip-selesai{background:#e0f2fe;color:#0284c7}
+    .cal-legend{display:flex;gap:1rem;flex-wrap:wrap;margin-top:1rem;padding-top:1rem;border-top:1px solid #f0f0f0}
+    .cal-legend-item{display:flex;align-items:center;gap:6px;font-size:0.75rem;color:var(--mid)}
+    .cal-legend-dot{width:10px;height:10px;border-radius:2px}
+
+    /* ── AVAILABILITY BADGE ── */
+    .availability-wrap{background:var(--white);border-radius:var(--radius-md);padding:1.5rem 2rem;box-shadow:0 2px 12px rgba(0,0,0,0.06);margin-bottom:2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+    .availability-wrap h3{font-family:var(--font-display);font-size:1rem;font-weight:600;color:var(--plum-dark)}
+    .avail-stats{display:flex;gap:1.5rem}
+    .avail-stat{text-align:center}
+    .avail-stat-num{font-family:var(--font-display);font-size:1.6rem;font-weight:600;color:var(--plum)}
+    .avail-stat-label{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--mid)}
   </style>
 </head>
 <body class="admin-page">
@@ -29,10 +73,16 @@
   </div>
   <ul class="admin-nav">
     <li><a href="#" class="active" onclick="showSection('dashboard',this)">📊 Dashboard</a></li>
-    <li><a href="#" onclick="showSection('bookings',this)">📋 Bookings</a></li>
+    <li>
+      <a href="#" onclick="showSection('bookings',this)">
+        📋 Bookings
+        <span class="nav-badge hidden" id="badge-belum-dp">0</span>
+      </a>
+    </li>
+    <li><a href="#" onclick="showSection('kalender',this)">📅 Kalender</a></li>
     <li><a href="#" onclick="showSection('analytics',this)">📈 Analytics</a></li>
     <li><a href="#" onclick="showSection('stats',this)">⚙️ Stats Counter</a></li>
-    <li style="margin-top:2rem; border-top:1px solid rgba(255,255,255,0.1); padding-top:1rem">
+    <li style="margin-top:2rem;border-top:1px solid rgba(255,255,255,0.1);padding-top:1rem">
       <a href="index.html">🌐 Lihat Website</a>
     </li>
     <li><a href="#" onclick="adminLogout()" style="color:#f87171">🚪 Logout</a></li>
@@ -42,15 +92,12 @@
 <!-- Main -->
 <main class="admin-main">
 
-  <!-- Topbar -->
   <div class="admin-topbar">
     <h1 id="section-title">Dashboard</h1>
-    <div style="display:flex;gap:0.75rem;align-items:center">
-      <span id="admin-email" style="font-size:0.82rem;color:var(--mid)"></span>
-    </div>
+    <span id="admin-email" style="font-size:0.82rem;color:var(--mid)"></span>
   </div>
 
-  <!-- DASHBOARD SECTION -->
+  <!-- ── DASHBOARD ── -->
   <div class="admin-section active" id="sec-dashboard">
     <div class="admin-cards" id="summary-cards">
       <div class="admin-card"><p class="admin-card-label">Total Booking</p><p class="admin-card-value" id="card-total">—</p></div>
@@ -58,31 +105,23 @@
       <div class="admin-card"><p class="admin-card-label">Sudah DP</p><p class="admin-card-value" id="card-dp" style="color:#ca8a04">—</p></div>
       <div class="admin-card"><p class="admin-card-label">Lunas / Selesai</p><p class="admin-card-value" id="card-lunas" style="color:#16a34a">—</p></div>
     </div>
-
     <div class="admin-chart-wrap">
       <h2>Booking per Bulan</h2>
       <canvas id="chart-monthly" height="80"></canvas>
     </div>
-
     <div class="analytics-grid">
-      <div class="admin-chart-wrap">
-        <h2>Paket Terpopuler</h2>
-        <canvas id="chart-packages"></canvas>
-      </div>
-      <div class="admin-chart-wrap">
-        <h2>Kota Terbanyak</h2>
-        <canvas id="chart-cities"></canvas>
-      </div>
+      <div class="admin-chart-wrap"><h2>Paket Terpopuler</h2><canvas id="chart-packages"></canvas></div>
+      <div class="admin-chart-wrap"><h2>Kota Terbanyak</h2><canvas id="chart-cities"></canvas></div>
     </div>
   </div>
 
-  <!-- BOOKINGS SECTION -->
+  <!-- ── BOOKINGS ── -->
   <div class="admin-section" id="sec-bookings">
     <div class="admin-table-wrap">
       <div class="admin-table-header">
         <h2>Semua Booking</h2>
         <div class="admin-controls">
-          <input type="text" class="admin-search" id="search-input" placeholder="Cari nama, kota..." oninput="filterTable()"/>
+          <input type="text" class="admin-search" id="search-input" placeholder="Cari nama, kota, email..." oninput="filterTable()"/>
           <select class="admin-filter" id="filter-status" onchange="filterTable()">
             <option value="">Semua Status</option>
             <option value="belum_dp">Belum DP</option>
@@ -93,7 +132,7 @@
           <select class="admin-filter" id="filter-city" onchange="filterTable()">
             <option value="">Semua Kota</option>
           </select>
-          <button class="action-btn action-edit" onclick="exportToSheets()">📤 Export Sheets</button>
+          <button class="action-btn action-edit" onclick="exportToSheets()">📤 Export CSV</button>
           <button class="action-btn" style="background:#fee2e2;color:#dc2626" onclick="confirmArchive()">🗂 Archive</button>
         </div>
       </div>
@@ -117,7 +156,41 @@
     </div>
   </div>
 
-  <!-- ANALYTICS SECTION -->
+  <!-- ── KALENDER ── -->
+  <div class="admin-section" id="sec-kalender">
+    <div class="availability-wrap">
+      <div>
+        <h3>Status Ketersediaan</h3>
+        <p style="font-size:0.82rem;color:var(--mid);margin-top:3px">Berdasarkan tanggal wedding yang sudah terdaftar</p>
+      </div>
+      <div class="avail-stats">
+        <div class="avail-stat"><div class="avail-stat-num" id="avail-bulan-ini">0</div><div class="avail-stat-label">Booking Bulan Ini</div></div>
+        <div class="avail-stat"><div class="avail-stat-num" id="avail-bulan-depan">0</div><div class="avail-stat-label">Bulan Depan</div></div>
+        <div class="avail-stat"><div class="avail-stat-num" id="avail-total-mendatang">0</div><div class="avail-stat-label">Total Mendatang</div></div>
+      </div>
+    </div>
+
+    <div class="calendar-wrap">
+      <div class="calendar-header">
+        <h2 id="cal-month-label">Bulan Tahun</h2>
+        <div class="calendar-nav">
+          <button class="cal-nav-btn" onclick="prevMonth()">‹</button>
+          <button class="cal-nav-btn" onclick="goToday()">Today</button>
+          <button class="cal-nav-btn" onclick="nextMonth()">›</button>
+        </div>
+      </div>
+      <div class="calendar-grid" id="calendar-grid"></div>
+      <div class="cal-legend">
+        <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#fee2e2;border:1px solid #dc2626"></div>Belum DP</div>
+        <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#fef9c3;border:1px solid #ca8a04"></div>Sudah DP</div>
+        <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#dcfce7;border:1px solid #16a34a"></div>Lunas</div>
+        <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#e0f2fe;border:1px solid #2563eb"></div>Selesai</div>
+        <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--gold-lt);border:1px solid var(--gold)"></div>Hari Ini</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ANALYTICS ── -->
   <div class="admin-section" id="sec-analytics">
     <div class="admin-chart-wrap">
       <h2>Booking per Bulan (Detail)</h2>
@@ -129,12 +202,10 @@
     </div>
   </div>
 
-  <!-- STATS SECTION -->
+  <!-- ── STATS ── -->
   <div class="admin-section" id="sec-stats">
     <div class="admin-table-wrap" style="padding:2rem">
-      <h2 style="font-family:var(--font-display);font-size:1.1rem;font-weight:600;color:var(--plum-dark);margin-bottom:1.5rem">
-        Edit Stats Counter (Landing Page)
-      </h2>
+      <h2 style="font-family:var(--font-display);font-size:1.1rem;font-weight:600;color:var(--plum-dark);margin-bottom:1.5rem">Edit Stats Counter (Landing Page)</h2>
       <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;max-width:480px">
         <div class="form-group"><label>Jumlah Client</label><input type="number" id="stat-clients" min="0"/></div>
         <div class="form-group"><label>Jumlah Vendor</label><input type="number" id="stat-vendors" min="0"/></div>
@@ -148,7 +219,39 @@
 
 </main>
 
-<!-- Modal Edit Booking -->
+<!-- ── MODAL: Detail Booking ── -->
+<div class="modal-overlay" id="detail-modal">
+  <div class="modal" style="max-width:600px">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.5rem">
+      <div>
+        <h3 id="detail-couple-name" style="font-family:var(--font-script);font-size:2rem;color:var(--plum)"></h3>
+        <span id="detail-status-badge" class="status-badge" style="margin-top:6px;display:inline-flex"></span>
+      </div>
+      <button onclick="closeDetailModal()" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--mid);padding:4px">×</button>
+    </div>
+    <div class="detail-grid">
+      <div class="detail-item"><label>Email</label><p id="d-email">—</p></div>
+      <div class="detail-item"><label>No. HP / WA</label><p id="d-phone">—</p></div>
+      <div class="detail-item"><label>Tanggal Wedding</label><p id="d-date">—</p></div>
+      <div class="detail-item"><label>Paket</label><p id="d-package">—</p></div>
+      <div class="detail-item"><label>Kota</label><p id="d-city">—</p></div>
+      <div class="detail-item"><label>Venue</label><p id="d-venue">—</p></div>
+      <div class="detail-item"><label>Sumber Info</label><p id="d-source">—</p></div>
+      <div class="detail-item"><label>Tanggal Booking</label><p id="d-created">—</p></div>
+      <div class="detail-item full" id="d-notes-wrap">
+        <label>Catatan / Kebutuhan Khusus</label>
+        <div class="detail-notes" id="d-notes">—</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:0.75rem;flex-wrap:wrap">
+      <button class="action-btn action-edit" onclick="openEditFromDetail()">✏️ Update Status</button>
+      <button class="action-btn" style="background:#fef9c3;color:#92400e" onclick="printInvoiceFromDetail()">🖨️ Print Invoice</button>
+      <a id="d-wa-link" href="#" target="_blank" class="action-btn" style="background:#dcfce7;color:#16a34a;text-decoration:none">💬 WA Klien</a>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL: Edit Status ── -->
 <div class="modal-overlay" id="edit-modal">
   <div class="modal">
     <h3>Update Status Booking</h3>
@@ -169,14 +272,11 @@
   </div>
 </div>
 
-<!-- Modal Archive -->
+<!-- ── MODAL: Archive ── -->
 <div class="modal-overlay" id="archive-modal">
   <div class="modal">
     <h3>Archive Data</h3>
-    <p style="font-size:0.88rem;color:var(--mid);line-height:1.7">
-      Semua data booking akan di-archive. Data yang sudah di-archive tidak akan muncul di tabel utama.<br/><br/>
-      Pastikan sudah di-export ke Google Sheets terlebih dahulu sebelum archive.
-    </p>
+    <p style="font-size:0.88rem;color:var(--mid);line-height:1.7">Semua data booking akan di-archive dan tidak muncul di tabel. Pastikan sudah export CSV terlebih dahulu.</p>
     <div class="modal-actions">
       <button class="action-btn action-edit" onclick="closeArchiveModal()">Batal</button>
       <button class="btn" style="background:#dc2626;color:white;padding:0.5rem 1.5rem" onclick="archiveAll()">Archive Semua</button>
@@ -184,7 +284,17 @@
   </div>
 </div>
 
-<!-- Toast -->
+<!-- ── MODAL: Kalender Detail ── -->
+<div class="modal-overlay" id="cal-modal">
+  <div class="modal" style="max-width:480px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
+      <h3 id="cal-modal-date" style="font-family:var(--font-display);font-size:1.2rem;color:var(--plum)"></h3>
+      <button onclick="closeCalModal()" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--mid)">×</button>
+    </div>
+    <div id="cal-modal-list"></div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

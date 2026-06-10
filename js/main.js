@@ -7,30 +7,28 @@ window.addEventListener('load', () => {
 
 // ── NAVBAR SCROLL ──
 const navbar = document.getElementById('navbar');
-window.addEventListener('scroll', () => {
-  navbar.classList.toggle('scrolled', window.scrollY > 60);
-});
+
+function updateNavbar() {
+  // Di index.html, navbar transparan di atas hero foto
+  // Begitu hero mulai keluar dari viewport, langsung tambah scrolled
+  const hero = document.getElementById('hero');
+  if (hero) {
+    const heroBottom = hero.getBoundingClientRect().bottom;
+    navbar.classList.toggle('scrolled', heroBottom <= 80);
+  } else {
+    navbar.classList.toggle('scrolled', window.scrollY > 60);
+  }
+}
+
+window.addEventListener('scroll', updateNavbar);
+// Jalankan sekali saat load untuk handle reload di tengah halaman
+updateNavbar();
 
 // ── HAMBURGER ──
 function toggleMenu() {
   document.getElementById('navbar-links').classList.toggle('open');
 }
 
-// ── PAGE TRANSITION ──
-document.querySelectorAll('a[href]').forEach(link => {
-  const href = link.getAttribute('href');
-  if (!href || href.startsWith('#') || href.startsWith('http') || href.startsWith('mailto') || href.startsWith('tel')) return;
-  link.addEventListener('click', e => {
-    e.preventDefault();
-    const pt = document.getElementById('page-transition');
-    pt.classList.add('in');
-    setTimeout(() => { window.location.href = href; }, 450);
-  });
-});
-window.addEventListener('pageshow', () => {
-  const pt = document.getElementById('page-transition');
-  if (pt) { pt.classList.remove('in'); pt.classList.add('out'); setTimeout(() => pt.classList.remove('out'), 500); }
-});
 
 // ── HERO CAROUSEL ──
 const slides = document.querySelectorAll('.hero-slide');

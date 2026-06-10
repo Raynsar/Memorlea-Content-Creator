@@ -9,15 +9,15 @@ window.addEventListener('scroll', () => navbar?.classList.toggle('scrolled', win
 function toggleMenu() { document.getElementById('navbar-links')?.classList.toggle('open'); }
 
 // ── PAGE TRANSITION ──
-document.querySelectorAll('a[href]').forEach(link => {
+document.addEventListener('click', e => {
+  const link = e.target.closest('a[href]');
+  if (!link) return;
   const href = link.getAttribute('href');
-  if (!href || href.startsWith('#') || href.startsWith('http')) return;
-  link.addEventListener('click', e => {
-    e.preventDefault();
-    const pt = document.getElementById('page-transition');
-    if (pt) { pt.classList.add('in'); setTimeout(() => { window.location.href = href; }, 450); }
-    else window.location.href = href;
-  });
+  if (!href || href.startsWith('#') || href.startsWith('http') || link.hasAttribute('download')) return;
+  e.preventDefault();
+  const pt = document.getElementById('page-transition');
+  if (pt) pt.classList.add('in');
+  setTimeout(() => { window.location.href = href; }, 450);
 });
 
 // ── RATE LIMITING ──

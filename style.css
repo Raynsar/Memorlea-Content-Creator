@@ -38,7 +38,7 @@ ul{list-style:none}
 
 /* NAVBAR */
 .navbar{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1rem 5%;background:transparent;transition:background var(--transition),box-shadow var(--transition)}
-.navbar.scrolled{background:rgba(250,247,242,0.96);backdrop-filter:blur(12px);box-shadow:0 2px 20px rgba(74,37,69,0.08)}
+.navbar.scrolled{background:rgba(250,247,242,0.97);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 2px 20px rgba(74,37,69,0.08)}
 .navbar-logo{display:flex;align-items:center;gap:0.6rem}
 .navbar-logo img{height:42px}
 .navbar-logo span{font-family:var(--font-script);font-size:1.5rem;color:var(--white);transition:color var(--transition)}
@@ -296,10 +296,11 @@ footer{background:var(--plum-dark);color:rgba(255,255,255,0.7);padding:4rem 5% 2
 .footer-social a{width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:0.85rem;transition:all var(--transition);color:rgba(255,255,255,0.6)}
 .footer-social a:hover{background:var(--gold);border-color:var(--gold);color:var(--white)}
 
-/* PAGE TRANSITION */
-.page-transition{position:fixed;inset:0;background:var(--plum-dark);z-index:9998;transform:translateY(100%);transition:transform 0.45s cubic-bezier(0.7,0,0.3,1)}
-.page-transition.in{transform:translateY(0)}
-.page-transition.out{transform:translateY(-100%)}
+
+
+/* PAGE FADE */
+body{animation:pageFadeIn 0.3s ease}
+@keyframes pageFadeIn{from{opacity:0}to{opacity:1}}
 
 /* ANIMATIONS */
 @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}

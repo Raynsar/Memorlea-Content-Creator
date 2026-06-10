@@ -8,15 +8,12 @@ const revealObserver = new IntersectionObserver(entries => {
 }, { threshold: 0.12 });
 document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
-document.querySelectorAll('a[href]').forEach(link => {
+document.addEventListener('click', e => {
+  const link = e.target.closest('a[href]');
+  if (!link) return;
   const href = link.getAttribute('href');
-  if (!href || href.startsWith('#') || href.startsWith('http')) return;
-  link.addEventListener('click', e => {
-    e.preventDefault();
-    const pt = document.getElementById('page-transition');
-    pt.classList.add('in');
-    setTimeout(() => { window.location.href = href; }, 450);
-  });
+  if (!href || href.startsWith('#') || href.startsWith('http') || link.hasAttribute('download')) return;
+  e.preventDefault();  setTimeout(() => { window.location.href = href; }, 450);
 });
 
 const portfolioItems = [
