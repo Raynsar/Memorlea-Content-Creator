@@ -27,9 +27,32 @@ const PACKAGE_LABEL = {
 };
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
+const SESSION_TIMEOUT_MS = 8 * 60 * 60 * 1000; // 8 jam
+const SESSION_KEY        = 'memorlea_admin_login_at';
+
 document.addEventListener('DOMContentLoaded', async () => {
   const { data: { session } } = await db.auth.getSession();
-  if (!session) { window.location.href = 'admin-login.html'; return; }
+
+  // Tidak ada session → ke login
+  if (!session) {
+    localStorage.removeItem(SESSION_KEY);
+    window.location.href = 'admin-login.html';
+    return;
+  }
+
+  // Cek apakah session sudah > 8 jam sejak login terakhir di device ini
+  const loginAt = localStorage.getItem(SESSION_KEY);
+  if (loginAt && Date.now() - parseInt(loginAt) > SESSION_TIMEOUT_MS) {
+    await db.auth.signOut();
+    localStorage.removeItem(SESSION_KEY);
+    window.location.href = 'admin-login.html';
+    return;
+  }
+
+  // Kalau loginAt belum di-set (login dari device lain / pertama kali),
+  // set sekarang supaya timeout mulai dihitung
+  if (!loginAt) localStorage.setItem(SESSION_KEY, Date.now().toString());
+
   document.getElementById('admin-email').textContent = session.user.email;
 
   const now = new Date();
@@ -37,6 +60,18 @@ document.addEventListener('DOMContentLoaded', async () => {
   calMonth = now.getMonth();
 
   await loadAll();
+
+  // Auto logout setelah sisa waktu session habis
+  const elapsed   = loginAt ? Date.now() - parseInt(loginAt) : 0;
+  const remaining = SESSION_TIMEOUT_MS - elapsed;
+  if (remaining > 0) {
+    setTimeout(async () => {
+      await db.auth.signOut();
+      localStorage.removeItem(SESSION_KEY);
+      alert('Sesi habis. Silakan login kembali.');
+      window.location.href = 'admin-login.html';
+    }, remaining);
+  }
 });
 
 async function loadAll() {
@@ -46,6 +81,7 @@ async function loadAll() {
 // ─── Auth ─────────────────────────────────────────────────────────────────────
 async function adminLogout() {
   await db.auth.signOut();
+  localStorage.removeItem(SESSION_KEY);
   window.location.href = 'admin-login.html';
 }
 
@@ -84,6 +120,7 @@ async function loadBookings() {
   renderSummaryCards();
   renderDashboardCharts();
   updateBadge();
+  renderReminders();
 }
 
 // ─── Badge Notifikasi ─────────────────────────────────────────────────────────
@@ -149,9 +186,14 @@ function filterTable() {
   const q      = document.getElementById('search-input').value.toLowerCase();
   const status = document.getElementById('filter-status').value;
   const city   = document.getElementById('filter-city').value;
+  const month  = document.getElementById('filter-month')?.value || ''; // format: YYYY-MM
+
   const filtered = allBookings.filter(b => {
     const matchQ = !q || [b.couple_name, b.city, b.email, b.phone].some(v => v?.toLowerCase().includes(q));
-    return matchQ && (!status || b.status === status) && (!city || b.city === city);
+    const matchS = !status || b.status === status;
+    const matchC = !city   || b.city   === city;
+    const matchM = !month  || (b.wedding_date && b.wedding_date.startsWith(month));
+    return matchQ && matchS && matchC && matchM;
   });
   renderTable(filtered);
 }
@@ -203,6 +245,15 @@ function openDetailModal(id) {
     waLink.style.display = 'none';
   }
 
+  // Catatan internal admin
+  const adminNotesEl = document.getElementById('d-admin-notes');
+  if (adminNotesEl) adminNotesEl.value = b.admin_notes || '';
+  const savedEl = document.getElementById('admin-notes-saved');
+  if (savedEl) savedEl.style.display = 'none';
+
+  // Riwayat status
+  renderStatusLog(b.status_log || []);
+
   document.getElementById('detail-modal').classList.add('open');
 }
 
@@ -238,12 +289,24 @@ function closeModal() {
 
 async function saveStatus() {
   if (!editingId) return;
-  const status = document.getElementById('modal-status').value;
-  const { error } = await db.from('bookings').update({ status }).eq('id', editingId);
+  const newStatus = document.getElementById('modal-status').value;
+  const b = allBookings.find(b => b.id === editingId);
+  if (!b) return;
+
+  // Buat entry log baru
+  const logEntry = { from: b.status, to: newStatus, at: new Date().toISOString() };
+  const newLog   = [...(b.status_log || []), logEntry];
+
+  const { error } = await db.from('bookings')
+    .update({ status: newStatus, status_log: newLog })
+    .eq('id', editingId);
   if (error) { showToast('Gagal update status', 'error'); return; }
 
   const idx = allBookings.findIndex(b => b.id === editingId);
-  if (idx !== -1) allBookings[idx].status = status;
+  if (idx !== -1) {
+    allBookings[idx].status     = newStatus;
+    allBookings[idx].status_log = newLog;
+  }
 
   closeModal();
   filterTable();
@@ -251,6 +314,7 @@ async function saveStatus() {
   renderDashboardCharts();
   renderCalendar();
   updateBadge();
+  renderReminders();
   showToast('Status berhasil diupdate!');
 }
 
@@ -566,6 +630,214 @@ function showToast(msg, type = 'success') {
   setTimeout(() => t.classList.remove('show'), 3000);
 }
 
+
+// ─── FITUR: Reminder Follow Up (belum_dp > 3 hari) ────────────────────────────
+function renderReminders() {
+  const wrap = document.getElementById('reminder-wrap');
+  const list = document.getElementById('reminder-list');
+  if (!wrap || !list) return;
+
+  const now      = Date.now();
+  const THREE_DAYS = 3 * 24 * 60 * 60 * 1000;
+
+  const overdue = allBookings.filter(b => {
+    if (b.status !== 'belum_dp' || !b.created_at) return false;
+    return (now - new Date(b.created_at).getTime()) > THREE_DAYS;
+  });
+
+  if (!overdue.length) { wrap.style.display = 'none'; return; }
+  wrap.style.display = 'block';
+
+  list.innerHTML = overdue.map(b => {
+    const created = new Date(b.created_at);
+    const hari    = Math.floor((now - created.getTime()) / (24*60*60*1000));
+    const tgl     = b.wedding_date
+      ? new Date(b.wedding_date + 'T00:00:00').toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' })
+      : '—';
+    const num     = b.phone ? b.phone.replace(/\D/g,'').replace(/^0/,'62') : null;
+    return `
+      <div style="display:flex;align-items:center;justify-content:space-between;background:white;border-radius:8px;padding:0.75rem 1rem;flex-wrap:wrap;gap:0.5rem">
+        <div>
+          <strong style="font-size:0.85rem;color:var(--plum)">${esc(b.couple_name)}</strong>
+          <span style="font-size:0.78rem;color:#dc2626;margin-left:8px">${hari} hari lalu</span>
+          <div style="font-size:0.75rem;color:var(--mid)">Wedding: ${tgl} · ${esc(b.city||'—')}</div>
+        </div>
+        <div style="display:flex;gap:6px">
+          ${num ? `<a href="https://wa.me/${num}" target="_blank" class="action-btn" style="background:#dcfce7;color:#16a34a;text-decoration:none">💬 WA</a>` : ''}
+          <button class="action-btn action-edit" onclick="openDetailModal('${b.id}')">Detail</button>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// ─── FITUR: Catatan Internal Admin ────────────────────────────────────────────
+async function saveAdminNotes() {
+  if (!detailId) return;
+  const notes = document.getElementById('d-admin-notes').value;
+  const { error } = await db.from('bookings').update({ admin_notes: notes }).eq('id', detailId);
+  if (error) { showToast('Gagal simpan catatan', 'error'); return; }
+
+  const idx = allBookings.findIndex(b => b.id === detailId);
+  if (idx !== -1) allBookings[idx].admin_notes = notes;
+
+  const saved = document.getElementById('admin-notes-saved');
+  saved.style.display = 'inline';
+  setTimeout(() => saved.style.display = 'none', 2500);
+}
+
+// ─── FITUR: Riwayat Status ─────────────────────────────────────────────────────
+function renderStatusLog(log) {
+  const el = document.getElementById('d-status-log');
+  if (!el) return;
+
+  if (!log || !log.length) {
+    el.innerHTML = '<span style="font-size:0.8rem;color:var(--mid)">Belum ada riwayat perubahan status.</span>';
+    return;
+  }
+
+  el.innerHTML = [...log].reverse().map(entry => {
+    const time = new Date(entry.at).toLocaleDateString('id-ID', {
+      day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit'
+    });
+    const fromColor = STATUS_COLOR[entry.from] || '#888';
+    const toColor   = STATUS_COLOR[entry.to]   || '#888';
+    return `
+      <div style="display:flex;align-items:center;gap:6px;font-size:0.78rem;padding:5px 0;border-bottom:1px solid #f5f5f5">
+        <span style="background:${fromColor}18;color:${fromColor};padding:2px 8px;border-radius:10px;font-weight:600">${STATUS_LABEL[entry.from]||entry.from}</span>
+        <span style="color:var(--mid)">→</span>
+        <span style="background:${toColor}18;color:${toColor};padding:2px 8px;border-radius:10px;font-weight:600">${STATUS_LABEL[entry.to]||entry.to}</span>
+        <span style="color:var(--mid);margin-left:4px">${time}</span>
+      </div>`;
+  }).join('');
+}
+
+// ─── FITUR: Quick Reply Template WA ───────────────────────────────────────────
+let waTemplateBookingId = null;
+
+function openWATemplate() {
+  waTemplateBookingId = detailId;
+  const b = allBookings.find(b => b.id === detailId);
+  if (!b) return;
+
+  // Update send link
+  if (b.phone) {
+    const num = b.phone.replace(/\D/g,'').replace(/^0/,'62');
+    document.getElementById('wa-template-send').href = `https://wa.me/${num}`;
+  }
+
+  document.getElementById('wa-template-text').value = '';
+  document.getElementById('wa-template-modal').classList.add('open');
+}
+
+function closeWATemplate() {
+  document.getElementById('wa-template-modal').classList.remove('open');
+}
+
+function fillTemplate(type) {
+  const b = allBookings.find(b => b.id === waTemplateBookingId);
+  if (!b) return;
+
+  const nama  = b.couple_name || '';
+  const tgl   = b.wedding_date
+    ? new Date(b.wedding_date + 'T00:00:00').toLocaleDateString('id-ID', { weekday:'long', day:'numeric', month:'long', year:'numeric' })
+    : '—';
+  const paket = PACKAGE_LABEL[b.package] || b.package || '—';
+
+  const templates = {
+    konfirmasi_dp: `Halo ${nama}!
+
+Terima kasih sudah menghubungi Memorlea Wedding Content Creator 🌸
+
+Kami senang bisa menemani hari spesial kalian!
+
+Untuk konfirmasi booking, mohon melakukan pembayaran DP 50% ke:
+Bank BCA: XXXX-XXXX-XXXX
+a.n. Alia Rahmah
+
+Detail booking:
+- Paket     : ${paket}
+- Tanggal   : ${tgl}
+
+Setelah transfer, mohon kirim bukti pembayaran ke sini ya 🙏
+
+Sampai jumpa di hari istimewa kalian! ✨`,
+
+    pelunasan: `Halo ${nama}!
+
+Wah sebentar lagi hari bahagia kalian ya 🎊
+
+Mengingatkan bahwa pelunasan biaya layanan Memorlea belum kami terima.
+
+Detail:
+- Paket   : ${paket}
+- Wedding : ${tgl}
+
+Mohon pelunasan dilakukan maksimal H-3 sebelum acara ya.
+
+Terima kasih! 💜`,
+
+    reminder_h7: `Halo ${nama}!
+
+Tinggal 7 hari lagi menuju hari bahagia kalian! 🥳
+
+Kami dari Memorlea ingin memastikan semua persiapan berjalan lancar.
+
+Mohon kirimkan:
+1. Rundown acara final
+2. Referensi konten yang diinginkan
+3. Konfirmasi vendor/WO yang perlu diinfokan
+
+Jika ada pertanyaan, kami siap membantu ya!
+
+Sampai jumpa ${tgl} 💜`,
+
+    terimakasih: `Halo ${nama}!
+
+Terima kasih sudah mempercayakan momen spesial kalian kepada Memorlea 🌸
+
+Semoga konten yang kami buat bisa menjadi kenangan indah yang selalu bisa kalian kenang.
+
+Semua file unedited sedang kami proses dan akan dikirim via Google Drive dalam 48 jam ya.
+
+Satu permintaan kecil — jika kalian puas dengan layanan kami, boleh minta tolong share pengalaman kalian di IG story? Itu akan sangat berarti bagi kami 🙏
+
+Selamat menempuh hidup baru! 💜 @memorlea`,
+  };
+
+  const text = templates[type] || '';
+  document.getElementById('wa-template-text').value = text;
+
+  // Update send link dengan template
+  const num = b.phone ? b.phone.replace(/\D/g,'').replace(/^0/,'62') : '6285121148620';
+  document.getElementById('wa-template-send').href =
+    `https://wa.me/${num}?text=${encodeURIComponent(text)}`;
+}
+
+// Update send link setiap kali template text diubah
+document.addEventListener('DOMContentLoaded', () => {
+  const ta = document.getElementById('wa-template-text');
+  if (ta) ta.addEventListener('input', () => {
+    const b = allBookings.find(b => b.id === waTemplateBookingId);
+    const num = b?.phone ? b.phone.replace(/\D/g,'').replace(/^0/,'62') : '6285121148620';
+    document.getElementById('wa-template-send').href =
+      `https://wa.me/${num}?text=${encodeURIComponent(ta.value)}`;
+  });
+});
+
+async function copyWATemplate() {
+  const text = document.getElementById('wa-template-text').value;
+  if (!text) { showToast('Template kosong'); return; }
+  try {
+    await navigator.clipboard.writeText(text);
+    showToast('Template berhasil di-copy!');
+  } catch {
+    showToast('Copy gagal, coba manual', 'error');
+  }
+}
+
+// ─── FITUR: Filter Tanggal Wedding ────────────────────────────────────────────
+// (filterTable sudah di-extend di bawah)
+
 // ─── Utility ─────────────────────────────────────────────────────────────────
 function esc(str) {
   return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -586,7 +858,7 @@ function closeModal() {
 }
 
 // Overlay click close
-['detail-modal','edit-modal','archive-modal','cal-modal'].forEach(id => {
+['detail-modal','edit-modal','archive-modal','cal-modal','wa-template-modal'].forEach(id => {
   document.getElementById(id)?.addEventListener('click', e => {
     if (e.target.id === id) document.getElementById(id).classList.remove('open');
   });

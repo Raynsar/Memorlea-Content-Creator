@@ -1,6 +1,18 @@
-// cek jika sudah login
+const SESSION_TIMEOUT_MS = 8 * 60 * 60 * 1000;
+const SESSION_KEY        = 'memorlea_admin_login_at';
+
+// Cek session yang masih aktif dan belum timeout
 db.auth.getSession().then(({ data: { session } }) => {
-  if (session) window.location.href = 'admin.html';
+  if (!session) return;
+  const loginAt = localStorage.getItem(SESSION_KEY);
+  // Ada session tapi sudah > 8 jam → paksa logout
+  if (loginAt && Date.now() - parseInt(loginAt) > SESSION_TIMEOUT_MS) {
+    db.auth.signOut();
+    localStorage.removeItem(SESSION_KEY);
+    return;
+  }
+  // Session masih valid → langsung ke dashboard
+  window.location.href = 'admin.html';
 });
 
 document.getElementById('login-form').addEventListener('submit', async (e) => {
@@ -21,6 +33,8 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
     btn.disabled = false;
     btn.textContent = 'Masuk';
   } else {
+    // Catat waktu login di device ini
+    localStorage.setItem(SESSION_KEY, Date.now().toString());
     window.location.href = 'admin.html';
   }
 });

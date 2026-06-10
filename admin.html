@@ -105,6 +105,18 @@
       <div class="admin-card"><p class="admin-card-label">Sudah DP</p><p class="admin-card-value" id="card-dp" style="color:#ca8a04">—</p></div>
       <div class="admin-card"><p class="admin-card-label">Lunas / Selesai</p><p class="admin-card-value" id="card-lunas" style="color:#16a34a">—</p></div>
     </div>
+    <!-- Reminder: belum DP > 3 hari -->
+    <div id="reminder-wrap" style="display:none;margin-bottom:1.5rem">
+      <div style="background:#fef2f2;border:1.5px solid #fca5a5;border-radius:var(--radius-md);padding:1.2rem 1.5rem">
+        <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem">
+          <span style="font-size:1.2rem">⚠️</span>
+          <strong style="font-size:0.85rem;color:#dc2626">Follow Up Diperlukan</strong>
+          <span style="font-size:0.78rem;color:#dc2626;opacity:0.8">— booking belum DP lebih dari 3 hari</span>
+        </div>
+        <div id="reminder-list" style="display:flex;flex-direction:column;gap:0.5rem"></div>
+      </div>
+    </div>
+
     <div class="admin-chart-wrap">
       <h2>Booking per Bulan</h2>
       <canvas id="chart-monthly" height="80"></canvas>
@@ -132,6 +144,7 @@
           <select class="admin-filter" id="filter-city" onchange="filterTable()">
             <option value="">Semua Kota</option>
           </select>
+          <input type="month" class="admin-filter" id="filter-month" onchange="filterTable()" title="Filter bulan wedding" style="padding:0.55rem 0.8rem;min-width:140px"/>
           <button class="action-btn action-edit" onclick="exportToSheets()">📤 Export CSV</button>
           <button class="action-btn" style="background:#fee2e2;color:#dc2626" onclick="confirmArchive()">🗂 Archive</button>
         </div>
@@ -239,14 +252,34 @@
       <div class="detail-item"><label>Sumber Info</label><p id="d-source">—</p></div>
       <div class="detail-item"><label>Tanggal Booking</label><p id="d-created">—</p></div>
       <div class="detail-item full" id="d-notes-wrap">
-        <label>Catatan / Kebutuhan Khusus</label>
+        <label>Catatan Klien</label>
         <div class="detail-notes" id="d-notes">—</div>
       </div>
+
+      <!-- Catatan Internal Admin -->
+      <div class="detail-item full">
+        <label>📝 Catatan Internal Admin <span style="font-weight:400;color:var(--mid);text-transform:none;letter-spacing:0">(tidak kelihatan ke klien)</span></label>
+        <textarea id="d-admin-notes" rows="3"
+          style="width:100%;padding:0.75rem;border:1.5px solid var(--lavender);border-radius:6px;font-family:var(--font-body);font-size:0.85rem;resize:vertical;outline:none;transition:border-color 0.3s"
+          placeholder="Contoh: Sudah WA, tunggu konfirmasi DP. Minta reschedule ke bulan depan..."
+          onfocus="this.style.borderColor='var(--plum)'"
+          onblur="this.style.borderColor='var(--lavender)'"></textarea>
+        <button onclick="saveAdminNotes()" class="action-btn action-edit" style="margin-top:0.5rem">💾 Simpan Catatan</button>
+        <span id="admin-notes-saved" style="display:none;font-size:0.75rem;color:#16a34a;margin-left:0.5rem">✓ Tersimpan</span>
+      </div>
+
+      <!-- Riwayat Status -->
+      <div class="detail-item full">
+        <label>🕐 Riwayat Status</label>
+        <div id="d-status-log" style="display:flex;flex-direction:column;gap:0.4rem;max-height:160px;overflow-y:auto"></div>
+      </div>
     </div>
-    <div style="display:flex;gap:0.75rem;flex-wrap:wrap">
+
+    <div style="display:flex;gap:0.75rem;flex-wrap:wrap;margin-top:0.5rem">
       <button class="action-btn action-edit" onclick="openEditFromDetail()">✏️ Update Status</button>
       <button class="action-btn" style="background:#fef9c3;color:#92400e" onclick="printInvoiceFromDetail()">🖨️ Print Invoice</button>
       <a id="d-wa-link" href="#" target="_blank" class="action-btn" style="background:#dcfce7;color:#16a34a;text-decoration:none">💬 WA Klien</a>
+      <button class="action-btn" style="background:#f0f4ff;color:#2563eb" onclick="openWATemplate()">📋 Template WA</button>
     </div>
   </div>
 </div>
@@ -292,6 +325,29 @@
       <button onclick="closeCalModal()" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--mid)">×</button>
     </div>
     <div id="cal-modal-list"></div>
+  </div>
+</div>
+
+<!-- ── MODAL: Template WA ── -->
+<div class="modal-overlay" id="wa-template-modal">
+  <div class="modal" style="max-width:520px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+      <h3>Quick Reply WhatsApp</h3>
+      <button onclick="closeWATemplate()" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--mid)">×</button>
+    </div>
+    <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1rem">
+      <button class="action-btn action-edit" onclick="fillTemplate('konfirmasi_dp')">Konfirmasi DP</button>
+      <button class="action-btn action-edit" onclick="fillTemplate('pelunasan')">Tagihan Lunas</button>
+      <button class="action-btn action-edit" onclick="fillTemplate('reminder_h7')">Reminder H-7</button>
+      <button class="action-btn action-edit" onclick="fillTemplate('terimakasih')">Terima Kasih</button>
+    </div>
+    <textarea id="wa-template-text" rows="10"
+      style="width:100%;padding:0.85rem;border:1.5px solid var(--lavender);border-radius:6px;font-family:var(--font-body);font-size:0.83rem;resize:vertical;outline:none;line-height:1.7"
+      placeholder="Pilih template di atas atau tulis sendiri..."></textarea>
+    <div style="display:flex;gap:0.75rem;margin-top:1rem;justify-content:flex-end">
+      <button class="action-btn action-edit" onclick="copyWATemplate()">📋 Copy</button>
+      <a id="wa-template-send" href="#" target="_blank" class="btn btn-primary" style="padding:0.45rem 1.2rem;font-size:0.78rem;text-decoration:none">Kirim via WA</a>
+    </div>
   </div>
 </div>
 
