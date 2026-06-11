@@ -124,12 +124,13 @@ function showSection(name, el) {
 
   if (name === 'analytics') renderAnalyticsCharts();
   if (name === 'kalender')  { renderCalendar(); renderAvailStats(); }
+  if (name === 'kru')       loadKru();
 }
 
 // ─── Data Loading ─────────────────────────────────────────────────────────────
 
 async function loadAll() {
-  await Promise.all([loadBookings(), loadStats()]);
+  await Promise.all([loadBookings(), loadStats(), loadKru()]);
 }
 
 async function loadBookings() {
@@ -285,6 +286,7 @@ function openDetailModal(id) {
   hideEl('admin-notes-saved');
 
   renderStatusLog(b.status_log || []);
+  renderAssignedKru(id);
   openModal('detail-modal');
 }
 
@@ -1177,6 +1179,9 @@ async function openAssignKruModal() {
   if (!b) return;
   assignBookingId = detailId;
 
+  // Tutup detail modal dulu supaya tidak overlap
+  closeModal('detail-modal');
+
   setText('assign-booking-name', b.couple_name);
   setText('assign-booking-date', formatDate(b.wedding_date, { weekday:'long', day:'numeric', month:'long', year:'numeric' }) + (b.city ? ` · ${b.city}` : ''));
 
@@ -1249,16 +1254,19 @@ async function saveAssignKru() {
     await db.from('crew_assignments').upsert(rows, { onConflict: 'booking_id,crew_id' });
   }
 
+  const savedId = assignBookingId;
   closeAssignKruModal();
-  await renderAssignedKru(assignBookingId);
   await loadKru();
   showToast('Kru berhasil di-assign!');
 
   // Kirim notif WA ke kru yang baru di-assign
-  const b = allBookings.find(b => b.id === assignBookingId);
+  const b = allBookings.find(b => b.id === savedId);
   if (b && selectedIds.length) {
     sendKruWANotif(selectedIds, b);
   }
+
+  // Buka kembali detail booking supaya kru yang di-assign kelihatan
+  openDetailModal(savedId);
 }
 
 // ─── Render Assigned Kru di Detail Booking ───────────────────
@@ -1310,38 +1318,6 @@ function sendKruWANotif(kruIds, booking) {
     const url = `https://wa.me/${toWANumber(k.phone)}?text=${encodeURIComponent(msg)}`;
     window.open(url, '_blank');
   });
-}
-
-// ─── Hook ke loadAll ─────────────────────────────────────────
-// Override loadAll untuk include loadKru
-const _origLoadAll = loadAll;
-async function loadAll() {
-  await Promise.all([loadBookings(), loadStats(), loadKru()]);
-}
-
-// ─── Hook ke showSection ─────────────────────────────────────
-const _origShowSection = showSection;
-function showSection(name, el) {
-  document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.admin-nav a').forEach(a => a.classList.remove('active'));
-  document.getElementById('sec-' + name)?.classList.add('active');
-  if (el) el.classList.add('active');
-  const titles = {
-    dashboard: 'Dashboard', bookings: 'Bookings', kalender: 'Kalender',
-    analytics: 'Analytics', stats: 'Stats Counter', kru: 'Manajemen Kru',
-  };
-  setText('section-title', titles[name] || name);
-  if (name === 'analytics') renderAnalyticsCharts();
-  if (name === 'kalender')  { renderCalendar(); renderAvailStats(); }
-  if (name === 'kru')       loadKru();
-}
-
-// ─── Hook ke openDetailModal ─────────────────────────────────
-// Render assigned kru saat buka detail booking
-const _origOpenDetailModal = openDetailModal;
-async function openDetailModal(id) {
-  _origOpenDetailModal(id);
-  await renderAssignedKru(id);
 }
 
 // ─── Overlay close untuk modal kru ──────────────────────────

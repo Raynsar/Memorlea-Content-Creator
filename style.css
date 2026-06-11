@@ -269,9 +269,9 @@ tr:hover td{background:#fafafa}
 .admin-chart-wrap h2{font-family:var(--font-display);font-size:1.1rem;font-weight:600;color:var(--plum-dark);margin-bottom:1.5rem}
 .admin-section{display:none}
 .admin-section.active{display:block}
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:500;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;visibility:hidden;transition:all var(--transition)}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:600;display:flex;align-items:flex-start;justify-content:center;padding:2rem 1rem;overflow-y:auto;opacity:0;visibility:hidden;transition:all var(--transition)}
 .modal-overlay.open{opacity:1;visibility:visible}
-.modal{background:var(--white);border-radius:var(--radius-lg);padding:2.5rem;max-width:500px;width:100%;box-shadow:var(--shadow-md);transform:translateY(20px);transition:transform var(--transition)}
+.modal{background:var(--white);border-radius:var(--radius-lg);padding:2rem;max-width:500px;width:100%;box-shadow:var(--shadow-md);transform:translateY(20px);transition:transform var(--transition);max-height:88vh;overflow-y:auto}
 .modal-overlay.open .modal{transform:translateY(0)}
 .modal h3{font-family:var(--font-display);font-size:1.4rem;font-weight:600;color:var(--plum);margin-bottom:1.5rem}
 .modal-actions{display:flex;gap:1rem;margin-top:2rem;justify-content:flex-end}
@@ -328,6 +328,34 @@ a.navbar-logo{display:flex;align-items:center;gap:0.6rem;text-decoration:none}
 .navbar.scrolled .nav-admin-link{color:rgba(0,0,0,0.25)!important}
 .navbar.scrolled .nav-admin-link:hover{color:var(--plum)!important}
 .nav-admin-link::after{display:none!important}
+
+
+/* ── ADMIN HELPER CLASSES (dipakai oleh admin.js) ── */
+.row-sub{font-size:0.75rem;color:var(--mid);margin-top:2px}
+.row-actions{display:flex;gap:5px;flex-wrap:wrap}
+.status-pill{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:0.75rem;font-weight:600;white-space:nowrap}
+.status-pill.sm{font-size:0.72rem;padding:2px 8px}
+.action-print{background:#fef9c3;color:#92400e}
+.action-print:hover{background:#fde68a}
+.action-delete{background:#fef2f2;color:#dc2626}
+.action-delete:hover{background:#fecaca}
+.action-wa{background:#dcfce7;color:#16a34a;text-decoration:none}
+.action-wa:hover{background:#bbf7d0}
+.log-entry{display:flex;align-items:center;gap:6px;font-size:0.78rem;padding:5px 0;border-bottom:1px solid #f5f5f5}
+.log-arrow{color:var(--mid)}
+.log-time{color:var(--mid);margin-left:4px;font-size:0.75rem}
+.log-empty{font-size:0.8rem;color:var(--mid)}
+.cal-modal-item{padding:1rem;border:1px solid #f0f0f0;border-radius:10px;margin-bottom:0.75rem;cursor:pointer;transition:background var(--transition)}
+.cal-modal-item:hover{background:var(--blush)}
+.cal-modal-item-header{display:flex;justify-content:space-between;align-items:flex-start}
+.cal-modal-name{font-family:var(--font-display);font-size:1.1rem;color:var(--plum)}
+.cal-modal-sub{font-size:0.82rem;color:var(--mid);margin-top:4px}
+.chip-more{background:#f3f4f6!important;color:#6b7280!important}
+.reminder-item{display:flex;align-items:center;justify-content:space-between;background:white;border-radius:8px;padding:0.75rem 1rem;flex-wrap:wrap;gap:0.5rem}
+.reminder-name{font-size:0.85rem;color:var(--plum)}
+.reminder-days{font-size:0.78rem;color:#dc2626;margin-left:8px}
+.reminder-sub{font-size:0.75rem;color:var(--mid)}
+.reminder-actions{display:flex;gap:6px}
 
 /* RESPONSIVE */
 @media(max-width:1024px){
