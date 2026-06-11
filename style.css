@@ -163,7 +163,7 @@ ul{list-style:none}
 .form-group{margin-bottom:1.5rem}
 .form-group label{display:block;font-size:0.78rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--plum);margin-bottom:0.5rem}
 .form-group label span{color:#e53e3e;margin-left:2px}
-.form-group input,.form-group select,.form-group textarea{width:100%;padding:0.85rem 1.1rem;border:1.5px solid var(--lavender);border-radius:var(--radius-sm);font-family:var(--font-body);font-size:0.88rem;color:var(--charcoal);background:var(--cream);transition:border-color var(--transition),box-shadow var(--transition);outline:none;-webkit-appearance:none}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:0.85rem 1.1rem;border:1.5px solid var(--lavender);border-radius:var(--radius-sm);font-family:var(--font-body);font-size:0.88rem;color:var(--charcoal);background:var(--cream);transition:border-color var(--transition),box-shadow var(--transition);outline:none;-webkit-appearance:none;appearance:none}
 .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--plum);box-shadow:0 0 0 3px rgba(74,37,69,0.08);background:var(--white)}
 .form-group textarea{resize:vertical;min-height:110px}
 .form-error{font-size:0.75rem;color:#e53e3e;margin-top:0.35rem;display:none}
